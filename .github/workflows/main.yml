@@ -13,19 +13,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Set up SSH key
+      run: |
+        echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
+        chmod 400 private_key.pem
+
     - name: Deploy to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no -i /home/dell/Downloads/example_key_pair_task2.pem ubuntu@54.145.52.75 << 'EOF'
+        ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@54.145.52.75 << 'EOF'
           # Navigate to the directory of your app
           cd /var/www/html 
 
           # Optional: If you are using git to manage your application, pull the latest changes
           git pull origin main 
-        
-                  
-          # Restart Nginx or your application
+
           sudo systemctl restart nginx 
         EOF
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}  # Ensure the SSH key is in GitHub secrets
 
