@@ -22,7 +22,7 @@ jobs:
     - name: Deploy to EC2
       run: |
         ssh ubuntu@3.92.161.14 << 'EOF'
-          cd /var/www/html/simple-todo-app # Change to the directory of your app
+          cd /var/www/html # Change to the directory of your app
           git pull origin main  # Pull the latest changes
           # npm install           # Uncomment if you need to install dependencies
           # npm run build         # Uncomment if you need to build your app
