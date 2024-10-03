@@ -14,14 +14,18 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Set up SSH
-      uses: khalyomede/ssh-action@v2
+      uses: appleboy/scp-action@v0.1.0
       with:
+        host: 3.92.161.14
+        username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
-          # known_hosts: ${{ secrets.EC2_KNOWN_HOSTS }} # Optional, add known hosts if needed
+        port: 22
+        source: "*"  # Specify the path to your app files
+        target: "/var/www/html"  # Target directory on EC2
 
     - name: Deploy to EC2
       run: |
-        ssh ubuntu@3.92.161.14 << 'EOF'
+        ssh -o StrictHostKeyChecking=no ubuntu@3.92.161.14 << 'EOF'
           cd /var/www/html # Change to the directory of your app
           git pull origin main  # Pull the latest changes
           # npm install           # Uncomment if you need to install dependencies
