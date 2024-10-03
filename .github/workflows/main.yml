@@ -16,7 +16,7 @@ jobs:
     - name: Set up SSH
       uses: appleboy/scp-action@v0.1.0
       with:
-        host: 3.92.161.14
+        host: 54.145.52.75
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         port: 22
@@ -25,7 +25,7 @@ jobs:
 
     - name: Deploy to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@3.92.161.14 << 'EOF'
+        ssh -o StrictHostKeyChecking=no ubuntu@54.145.52.75 << 'EOF'
           cd /var/www/html # Change to the directory of your app
           git pull origin main  # Pull the latest changes
           # npm install           # Uncomment if you need to install dependencies
