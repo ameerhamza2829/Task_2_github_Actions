@@ -13,23 +13,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up SSH
-      uses: appleboy/scp-action@v0.1.0
-      with:
-        host: 54.145.52.75
-        username: ubuntu
-        key: ${{ secrets.EC2_SSH_KEY }}
-        port: 22
-        source: "*"  # Specify the path to your app files
-        target: "/var/www/html"  # Target directory on EC2
-
     - name: Deploy to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@54.145.52.75 << 'EOF'
-          cd /var/www/html # Change to the directory of your app
-          git pull origin main  # Pull the latest changes
-          # npm install           # Uncomment if you need to install dependencies
-          # npm run build         # Uncomment if you need to build your app
-          sudo systemctl restart nginx # Restart Nginx or your application
+        ssh -o StrictHostKeyChecking=no -i /home/dell/Downloads/example_key_pair_task2.pem ubuntu@54.145.52.75 << 'EOF'
+          # Navigate to the directory of your app
+          cd /var/www/html 
+
+          # Optional: If you are using git to manage your application, pull the latest changes
+          git pull origin main 
+        
+                  
+          # Restart Nginx or your application
+          sudo systemctl restart nginx 
         EOF
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}  # Ensure the SSH key is in GitHub secrets
 
