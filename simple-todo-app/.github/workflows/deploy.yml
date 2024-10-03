@@ -1,37 +1,27 @@
-name: Build and Deploy to EC2 your TO DO APP
+name: Deploy to EC2
 
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
     - name: Deploy to EC2
-      env:
-        EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-        EC2_HOST: ${{ secrets.EC2_HOST }}
-        EC2_USER: ${{ secrets.EC2_USER }}
       run: |
-        # Create a private key file
-        echo "$EC2_SSH_KEY" > private_key.pem
-        sudo chmod 600 private_key.pem
-        
-        # Create the target directory if it doesn't exist
-        sudo ssh -o StrictHostKeyChecking=no -i private_key.pem $EC2_USER@$EC2_HOST "sudo mkdir -p /var/www/html/todo-app && sudo rm -rf /var/www/html/todo-app/*"
-
-        # Copy files to the Nginx document root
-<<<<<<< HEAD
-        sudoscp -o StrictHostKeyChecking=no -i private_key.pem -r * $EC2_USER@$EC2_HOST:/var/www/html/todo-app
-=======
-        sudo scp -o StrictHostKeyChecking=no -i private_key.pem -r * $EC2_USER@$EC2_HOST:/var/www/html/todo-app
->>>>>>> 36a2e20c67f7e07d00c292706704534a3aa720d0
-
-        # Restart Nginx to pick up the new files (if needed)
-        sudo ssh -o StrictHostKeyChecking=no -i private_key.pem $EC2_USER@$EC2_HOST "sudo systemctl restart nginx"
+        ssh ubuntu@3.92.161.14 << 'EOF'
+          cd /var/www/html/simple-todo-app # Change to the directory of your app
+          git pull origin main  # Pull the latest changes
+          sudo systemctl restart nginx # Restart Nginx or your application
+        EOF
