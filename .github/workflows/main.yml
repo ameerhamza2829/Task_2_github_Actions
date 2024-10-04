@@ -20,7 +20,7 @@ jobs:
 
     - name: Deploy to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@54.145.52.75 << 'EOF'
+        ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@34.229.239.147 << 'EOF'
         
           git config --global --add safe.directory /var/www/html
 
