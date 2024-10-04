@@ -22,18 +22,9 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@34.229.239.147 << 'EOF'
         
-          git config --global --add safe.directory /var/www/html
-
-          sudo chown -R ubuntu:ubuntu /var/www/html
-
-           
-        # Navigate to the directory of your app
           cd /var/www/html 
 
-          # Optional: If you are using git to manage your application, pull the latest changes
           git pull origin main 
- 
-          cat index.html
 
           sudo systemctl restart nginx 
         EOF
